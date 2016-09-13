@@ -2,7 +2,7 @@
  *     File Name           :     src/main.c
  *     Created By          :     anon
  *     Creation Date       :     [2016-09-12 15:18]
- *     Last Modified       :     [2016-09-13 09:53]
+ *     Last Modified       :     [2016-09-13 11:15]
  *     Description         :      
  **********************************************************************************/
 #include <getopt.h>
@@ -11,14 +11,20 @@
 #include <unistd.h>
 #include <jnxc_headers/jnx_types.h>
 #include <signal.h>
+#include "interface_control.h"
+
+interface_control *controller;
+
 void signal_handler(int sig) {
 
-
+  if(controller) {
+    interface_control_destroy(&controller);
+  }
 }
 void show_help(void) {
   printf("======================================\n");
   printf("Hopper allows you to share packets across interfaces\n");
-  printf("--iface IFACE1_NAME IFACE2_NAME (e.g. --iface wlan0 eth0 eth1)\n");
+  printf("--iface Takes multiple device names (e.g. --iface \"wlan0 eth0 eth1\")\n");
   printf("OPTIONAL --port PORT_NUM (e.g. --port 8080)\n");
   printf("======================================\n");
 }
@@ -26,6 +32,7 @@ int main(int argc, char **argv) {
 
   if (signal(SIGINT, signal_handler) == SIG_ERR)
     printf("\ncan't catch SIGINT\n");
+  
   
   int opt_index =0,c=0;
 
@@ -57,6 +64,10 @@ int main(int argc, char **argv) {
     exit(0);
   }
 
+  controller = interface_control_create();
+
+  printf("-> %s\n",iface);
+  interface_control_create_interface_definitions(controller, iface);
 
   while(1) {
 
@@ -64,6 +75,8 @@ int main(int argc, char **argv) {
   }
 
 
-
+  if(controller)
+    interface_control_destroy(&controller);
+  
   return 0;
 }
