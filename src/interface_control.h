@@ -2,7 +2,7 @@
  *     File Name           :     src/interface_control.h
  *     Created By          :     anon
  *     Creation Date       :     [2016-09-12 16:11]
- *     Last Modified       :     [2016-09-12 16:31]
+ *     Last Modified       :     [2016-09-13 09:46]
  *     Description         :      
  **********************************************************************************/
 
@@ -11,17 +11,19 @@
 #include <stdlib.h>
 #include <jnxc_headers/jnx_udp_socket.h>
 
-typedef struct interface_control {
 
+typedef struct interface_definition {
   char *port;
-  char *iface0;
-  char *iface1;
-  jnx_udp_listener *iface0_listener;
-  jnx_udp_listener *iface1_listener;
+  char *name;
+  jnx_udp_listener *iface_listener;
+  jnx_udp_listener_callback iface_listener_callback;
+} interface_definition;
+
+typedef struct interface_control {
+  
 }interface_control;
 
-interface_control *interface_control_create(char *iface0, char *iface1, 
-    char *port);
+interface_control *interface_control_create();
 
 void interface_control_destroy(interface_control **i);
 #endif
