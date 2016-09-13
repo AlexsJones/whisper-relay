@@ -2,7 +2,7 @@
  *     File Name           :     src/main.c
  *     Created By          :     anon
  *     Creation Date       :     [2016-09-12 15:18]
- *     Last Modified       :     [2016-09-13 11:15]
+ *     Last Modified       :     [2016-09-13 15:31]
  *     Description         :      
  **********************************************************************************/
 #include <getopt.h>
@@ -20,6 +20,7 @@ void signal_handler(int sig) {
   if(controller) {
     interface_control_destroy(&controller);
   }
+  exit(0);
 }
 void show_help(void) {
   printf("======================================\n");
@@ -31,6 +32,8 @@ void show_help(void) {
 int main(int argc, char **argv) {
 
   if (signal(SIGINT, signal_handler) == SIG_ERR)
+    printf("\ncan't catch SIGINT\n");
+  if (signal(SIGSTOP, signal_handler) == SIG_ERR)
     printf("\ncan't catch SIGINT\n");
   
   
@@ -66,10 +69,11 @@ int main(int argc, char **argv) {
 
   controller = interface_control_create();
 
-  printf("-> %s\n",iface);
-  interface_control_create_interface_definitions(controller, iface);
+  interface_control_create_interface_definitions(controller, iface,port, AF_INET);
 
   while(1) {
+    
+    interface_control_tick(controller);
 
     sleep(.25);
   }

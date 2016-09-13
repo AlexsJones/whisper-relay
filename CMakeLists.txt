@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 set(INSTALL_PREFIX /usr)
 
-set(PROJECT_NAME "whisper-relay")
+set(PROJECT_NAME "whisper_relay")
 
 project(${PROJECT_NAME})
 
